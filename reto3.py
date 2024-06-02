@@ -16,7 +16,11 @@ class MovieStats(MRJob):
         ]
     
     def mapper_get_movie_views_and_ratings(self, _, line):
-        user_id, movie_id, rating, genre, date = line.split(',')
+        data = line.strip().split(',')
+        if data[0] == 'Usuario':
+            # Ignorar la línea de encabezado
+            return
+        user_id, movie_id, rating, genre, date = data
         yield date, (1, float(rating))
         
     def reducer_count_views_and_ratings(self, key, values):

@@ -42,7 +42,10 @@ class MovieAnalysis(MRJob):
                 for val in data:
                     yield key, val
             else:
-                yield key, mean(map(float, data))
+                try:
+                    yield key, mean(map(float, data))
+                except ValueError:
+                    pass  # Ignorar valores no numéricos
 
     def reducer_user_stats(self, key, values):
         if key == 'user_movie':

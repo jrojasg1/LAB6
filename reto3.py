@@ -16,11 +16,9 @@ class MovieStats(MRJob):
         ]
     
     def mapper_get_movie_views_and_ratings(self, _, line):
-        data = line.strip().split(',')
-        if data[0] == 'Usuario':
-            # Ignorar la línea de encabezado
+        if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
             return
-        user_id, movie_id, rating, genre, date = data
+        user_id, movie_id, rating, genre, date = line.split(',')
         yield date, (1, float(rating))
         
     def reducer_count_views_and_ratings(self, key, values):
@@ -70,6 +68,8 @@ class MovieStats(MRJob):
         yield "Worst average rating day:", min_rating_day
     
     def mapper_get_movie_genre(self, _, line):
+        if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
+            return
         _, _, rating, genre, date = line.split(',')
         yield genre, float(rating)
     

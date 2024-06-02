@@ -16,11 +16,9 @@ class StockAnalysis(MRJob):
         ]
 
     def mapper_collect_data(self, _, line):
-        # Dividir la línea en campos
         fields = line.strip().split(',')
         if fields[0] == 'Company':
-            # Ignorar la línea de encabezado
-            return
+            return  # Ignorar la línea de encabezado
 
         try:
             company, price, date = fields
@@ -35,12 +33,12 @@ class StockAnalysis(MRJob):
 
         min_price = min(prices, key=lambda x: x[0])
         max_price = max(prices, key=lambda x: x[0])
-        is_stable = all(prices[i][0] <= prices[i+1][0] for i in range(len(prices)-1))
+        is_stable = all(prices[i][0] <= prices[i + 1][0] for i in range(len(prices) - 1))
 
-        yield company, (min_price, max_price, is_stable, prices)
+        yield company, (min_price, max_price, is_stable, list(prices))
 
     def mapper_find_extremes(self, company, data):
-        min_price, max_price, is_stable, _ = data
+        min_price, max_price, is_stable, prices = data
         yield company, (min_price, max_price)
         yield 'stable_check', (company, is_stable)
 
@@ -50,7 +48,7 @@ class StockAnalysis(MRJob):
                 if is_stable:
                     yield 'stable', company
         else:
-            yield key, values
+            yield key, list(values)
 
     def mapper_stable_stocks(self, key, value):
         if key == 'stable':

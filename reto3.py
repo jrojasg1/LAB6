@@ -6,12 +6,11 @@ class MovieMetrics(MRJob):
     def mapper(self, _, line):
         data = line.strip().split(",")
         # Filtrar líneas vacías y líneas con encabezados
-        if data[0] == "User":
-            return
-        if len(data) == 5:
-            user_id, movie_id, rating, genre, date = data
-            yield ("user_movie", (user_id, movie_id, rating))
-            yield ("date_movie", (date, movie_id, rating))
+        if data and data[0] != "Usuario":
+            if len(data) == 5:
+                user_id, movie_id, rating, genre, date = data
+                yield ("user_movie", (user_id, movie_id, rating))
+                yield ("date_movie", (date, movie_id, rating))
 
     def reducer(self, key, values):
         if key == "user_movie":

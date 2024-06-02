@@ -39,7 +39,8 @@ class MovieAnalysis(MRJob):
         else:
             data = list(values)
             if isinstance(data[0], tuple):
-                yield key, data
+                for val in data:
+                    yield key, val
             else:
                 yield key, mean(map(float, data))
 

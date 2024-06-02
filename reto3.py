@@ -19,6 +19,7 @@ class MovieStats(MRJob):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
             return
         parts = line.split(',')
+        print("Parts:", parts)  # Debugging
         if len(parts) != 5:
             return
         user_id, movie_id, rating, genre, date = parts

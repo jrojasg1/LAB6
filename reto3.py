@@ -52,8 +52,10 @@ class MovieStats(MRJob):
         yield key, rating
     
     def reducer_count_ratings(self, key, values):
-        ratings = list(values)
-        yield key, (len(ratings), sum(ratings) / len(ratings))
+        if len(values) != 2:
+            return
+        _, rating = values
+        yield key, rating
     
     def reducer_find_max_min_rating_day(self, key, values):
         max_rating_day = None

@@ -50,3 +50,22 @@ aws emr create-cluster \
 En la consola de AWS:
 
 ![image](https://github.com/jrojasg1/LAB6/assets/60229862/84ecc298-b47f-4c99-9773-4275d486eaff)
+
+
+## Ejecución de Lab con datos en S3
+
+Comando para ejecutar el programa:
+
+```sh
+python wordcount-mr.py s3://jrojasg1-lab-emr/data/datasets/gutenberg-small/*.txt -r hadoop --output-dir s3://jrojasg1-lab-emr/data/result_lab --conf-path mrjob.conf
+```
+
+Resultado en Consola:
+
+![image](https://github.com/jrojasg1/LAB6/assets/60229862/222c6c64-8815-48ee-ba83-9b4776fcd144)
+
+Resultados en S3:
+
+![image](https://github.com/jrojasg1/LAB6/assets/60229862/5a07a53e-f84c-400c-9d72-e95901581d31)
+
+![image](https://github.com/jrojasg1/LAB6/assets/60229862/5530ff84-d731-4105-add5-2de3a4b66fc7)

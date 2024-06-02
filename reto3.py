@@ -18,7 +18,7 @@ class MovieMetrics(MRJob):
             for user_id, movie_id, rating in values:
                 movies_count.setdefault(movie_id, {"count": 0, "sum": 0})
                 movies_count[movie_id]["count"] += 1
-                movies_count[movie_id]["sum"] += rating
+                movies_count[movie_id]["sum"] += int(rating)
                 users_ratings.setdefault(movie_id, set())
                 users_ratings[movie_id].add(user_id)
             for movie_id, data in movies_count.items():

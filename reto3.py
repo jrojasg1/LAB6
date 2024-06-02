@@ -4,13 +4,13 @@ from mrjob.step import MRStep
 class MovieMetrics(MRJob):
 
     def mapper(self, _, line):
-        data = line.strip().split(",")
-        # Filtrar líneas vacías y líneas con encabezados
-        if data and data[0] != "User":
-            if len(data) == 5:
-                user_id, movie_id, rating, genre, date = data
-                yield ("user_movie", (user_id, movie_id, rating))
-                yield ("date_movie", (date, movie_id, rating))
+        fields = line.strip().split(',')
+        if fields[0] == 'Company':
+            return  # Ignorar la línea de encabezado
+        if len(fields) == 5:
+            user_id, movie_id, rating, genre, date = fields
+            yield ("user_movie", (user_id, movie_id, rating))
+            yield ("date_movie", (date, movie_id, rating))
 
     def reducer(self, key, values):
         if key == "user_movie":

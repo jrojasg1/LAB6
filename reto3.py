@@ -41,8 +41,8 @@ class MovieStats(MRJob):
             if views < min_views:
                 min_views = views
                 min_views_day = key
-        yield "Most viewed day:", max_views_day
-        yield "Least viewed day:", min_views_day
+        yield 'Most viewed day:', max_views_day
+        yield 'Least viewed day:', min_views_day
     
     def mapper_get_movie_genre(self, _, line):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados

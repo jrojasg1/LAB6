@@ -54,7 +54,7 @@ En la consola de AWS:
 
 ## Ejecución de Lab con datos en S3
 
-Comando para ejecutar el programa:
+Comando para ejecutar el programa desde hadoop:
 
 ```sh
 python wordcount-mr.py s3://jrojasg1-lab-emr/data/datasets/gutenberg-small/*.txt -r hadoop --output-dir s3://jrojasg1-lab-emr/data/result_lab --conf-path mrjob.conf

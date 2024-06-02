@@ -6,7 +6,7 @@ class MovieMetrics(MRJob):
     def mapper_user_movie_count(self, _, line):
         if isinstance(line, str):
             data = line.strip().split(",")
-            if data and data[0] != "User":
+            if data and data[0] != "Usuario":
                 user_id, movie_id, rating, genre, date = data
                 yield user_id, (1, int(rating))
 
@@ -23,7 +23,7 @@ class MovieMetrics(MRJob):
     def mapper_date_movie_count(self, _, line):
         if isinstance(line, str):
             data = line.strip().split(",")
-            if data and data[0] != "User":
+            if data and data[0] != "Usuario":
                 user_id, movie_id, rating, genre, date = data
                 yield date, 1
 
@@ -35,7 +35,7 @@ class MovieMetrics(MRJob):
     def mapper_movie_user_count(self, _, line):
         if isinstance(line, str):
             data = line.strip().split(",")
-            if data and data[0] != "User":
+            if data and data[0] != "Usuario":
                 user_id, movie_id, rating, genre, date = data
                 yield movie_id, (user_id, int(rating))
 
@@ -52,7 +52,7 @@ class MovieMetrics(MRJob):
     def mapper_date_average_rating(self, _, line):
         if isinstance(line, str):
             data = line.strip().split(",")
-            if data and data[0] != "User":
+            if data and data[0] != "Usuario":
                 user_id, movie_id, rating, genre, date = data
                 yield date, int(rating)
 
@@ -65,7 +65,7 @@ class MovieMetrics(MRJob):
     def mapper_genre_rating(self, _, line):
         if isinstance(line, str):
             data = line.strip().split(",")
-            if data and data[0] != "User":
+            if data and data[0] != "Usuario":
                 user_id, movie_id, rating, genre, date = data
                 yield genre, int(rating)
 

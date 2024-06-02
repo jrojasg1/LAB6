@@ -34,15 +34,17 @@ class MovieStats(MRJob):
         min_views_day = None
         max_views = 0
         min_views = float('inf')
-        for views, _ in values:
+        for value in values:
+            views, _ = value
             if views > max_views:
                 max_views = views
                 max_views_day = key
             if views < min_views:
                 min_views = views
                 min_views_day = key
-        yield 'Most viewed day:', max_views_day
-        yield 'Least viewed day:', min_views_day
+        yield "Most viewed day:", max_views_day
+        yield "Least viewed day:", min_views_day
+
     
     def mapper_get_movie_genre(self, _, line):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
@@ -55,8 +57,10 @@ class MovieStats(MRJob):
     
     def reducer_best_worst_genre(self, key, values):
         ratings = list(values)
-        avg_rating = sum(ratings) / len(ratings)
-        yield f"Average rating for {key} genre:", avg_rating
+        if ratings:  # Verificar si hay calificaciones
+            avg_rating = sum(ratings) / len(ratings)
+            yield f"Average rating for {key} genre:", avg_rating
+
 
 if __name__ == '__main__':
     MovieStats.run()

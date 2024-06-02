@@ -25,11 +25,11 @@ class MovieMetrics(MRJob):
                 users_ratings[movie_id].add(user_id)
             for user_id, data in movies_count.items():
                 yield (f"User {user_id}", (f"{data['count']} movies viewed",
-                                            f"Average rating: {data['sum'] / data['count']:.2f}"))
+                                             f"Average rating: {data['sum'] / data['count']:.2f}"))
             for movie_id, users in users_ratings.items():
                 movies_count.setdefault(movie_id, {"count": 0, "sum": 0})  # Inicializar movies_count para cada película
                 yield (f"Movie {movie_id}", (f"{len(users)} users viewed",
-                                            f"Average rating: {movies_count[movie_id]['sum'] / len(users):.2f}"))
+                                              f"Average rating: {movies_count[movie_id]['sum'] / len(users):.2f}"))
         elif key == "date_movie":
             days = {}
             for date, movie_id, rating in values:
@@ -43,11 +43,16 @@ class MovieMetrics(MRJob):
         elif key == "movie_genre":
             genres = {}
             for movie_id, genre, rating in values:
-                genres.setdefault(genre, {"count": 0, "sum": 0})
-                genres[genre]["count"] += 1
-                genres[genre]["sum"] += rating
+                genres.setdefault(genre, {"best_movie": None, "worst_movie": None, "best_rating": float('-inf'), "worst_rating": float('inf')})
+                if rating > genres[genre]["best_rating"]:
+                    genres[genre]["best_movie"] = movie_id
+                    genres[genre]["best_rating"] = rating
+                if rating < genres[genre]["worst_rating"]:
+                    genres[genre]["worst_movie"] = movie_id
+                    genres[genre]["worst_rating"] = rating
             for genre, data in genres.items():
-                yield (f"Genre {genre}", (f"{data['count']} movies", f"Average rating: {data['sum'] / data['count']:.2f}"))
+                yield (f"Genre {genre}", (f"Best movie: {data['best_movie']}",
+                                            f"Worst movie: {data['worst_movie']}"))
 
     def steps(self):
         return [

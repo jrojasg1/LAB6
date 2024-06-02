@@ -35,7 +35,7 @@ class StockAnalysis(MRJob):
         max_price = max(prices, key=lambda x: x[0])
         is_stable = all(prices[i][0] <= prices[i + 1][0] for i in range(len(prices) - 1))
 
-        yield company, (min_price, max_price, is_stable, list(prices))
+        yield company, (min_price, max_price, is_stable, prices)
 
     def mapper_find_extremes(self, company, data):
         min_price, max_price, is_stable, prices = data
@@ -54,8 +54,8 @@ class StockAnalysis(MRJob):
         if key == 'stable':
             yield 'stable', value
         else:
-            for price, date in value:
-                yield date, (key, price)
+            for company, price in value:
+                yield price[1], (company, price[0])  # Emitir (fecha, (empresa, precio))
 
     def reducer_stable_stocks(self, key, values):
         if key == 'stable':
@@ -63,7 +63,7 @@ class StockAnalysis(MRJob):
         else:
             prices = list(values)
             min_price = min(prices, key=lambda x: x[1])
-            count_min = sum(1 for price in prices if price[1] == min_price[1])
+            count_min = sum(1 for company, price in prices if price == min_price[1])
             yield key, count_min
 
     def mapper_black_day(self, key, value):

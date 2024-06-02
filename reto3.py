@@ -8,9 +8,6 @@ class MovieStats(MRJob):
             MRStep(mapper=self.mapper_get_movie_views_and_ratings,
                    reducer=self.reducer_count_views_and_ratings),
             MRStep(reducer=self.reducer_find_max_min_views_day),
-            MRStep(mapper=self.mapper_get_movie_ratings,
-                   reducer=self.reducer_count_ratings),
-            MRStep(reducer=self.reducer_find_max_min_rating_day),
             MRStep(mapper=self.mapper_get_movie_genre,
                    reducer=self.reducer_best_worst_genre)
         ]
@@ -46,31 +43,6 @@ class MovieStats(MRJob):
                 min_views_day = key
         yield "Most viewed day:", max_views_day
         yield "Least viewed day:", min_views_day
-    
-    def mapper_get_movie_ratings(self, key, value):
-        _, rating = value
-        yield key, rating
-    
-    def reducer_count_ratings(self, key, values):
-        if len(values) != 2:
-            return
-        _, rating = values
-        yield key, rating
-    
-    def reducer_find_max_min_rating_day(self, key, values):
-        max_rating_day = None
-        min_rating_day = None
-        max_rating = 0
-        min_rating = float('inf')
-        for num_ratings, avg_rating in values:
-            if avg_rating > max_rating:
-                max_rating = avg_rating
-                max_rating_day = key
-            if avg_rating < min_rating:
-                min_rating = avg_rating
-                min_rating_day = key
-        yield "Best average rating day:", max_rating_day
-        yield "Worst average rating day:", min_rating_day
     
     def mapper_get_movie_genre(self, _, line):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados

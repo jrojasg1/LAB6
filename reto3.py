@@ -41,7 +41,7 @@ class MovieAnalysis(MRJob):
             if isinstance(data[0], tuple):
                 yield key, data
             else:
-                yield key, mean(data)
+                yield key, mean(map(float, data))
 
     def reducer_user_stats(self, key, values):
         if key == 'user_movie':

@@ -18,7 +18,10 @@ class MovieStats(MRJob):
     def mapper_get_movie_views_and_ratings(self, _, line):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
             return
-        user_id, movie_id, rating, genre, date = line.split(',')
+        parts = line.split(',')
+        if len(parts) != 5:
+            return
+        user_id, movie_id, rating, genre, date = parts
         yield date, (1, float(rating))
         
     def reducer_count_views_and_ratings(self, key, values):
@@ -70,7 +73,10 @@ class MovieStats(MRJob):
     def mapper_get_movie_genre(self, _, line):
         if line.startswith('Usuario'):  # Ignorar la primera línea con los encabezados
             return
-        _, _, rating, genre, date = line.split(',')
+        parts = line.split(',')
+        if len(parts) != 5:
+            return
+        _, _, rating, genre, date = parts
         yield genre, float(rating)
     
     def reducer_best_worst_genre(self, key, values):

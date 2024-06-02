@@ -27,10 +27,10 @@ class MovieMetrics(MRJob):
                 users_ratings.setdefault(movie_id, set())
                 users_ratings[movie_id].add(user_id)
             for movie_id, data in movies_count.items():
-                yield None, (f"Movie {movie_id}: {data['count']} views",
+                yield key, (f"Movie {movie_id}: {data['count']} views",
                              f"Average rating: {data['sum'] / data['count']:.2f}")
             for movie_id, users in users_ratings.items():
-                yield None, (f"Movie {movie_id}: {len(users)} users",
+                yield key, (f"Movie {movie_id}: {len(users)} users",
                              f"Average rating: {movies_count[movie_id]['sum'] / len(users):.2f}")
         elif key == "date_movie":
             days = {}

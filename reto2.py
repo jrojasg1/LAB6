@@ -59,7 +59,8 @@ class StockAnalysis(MRJob):
 
     def reducer_stable_stocks(self, key, values):
         if key == 'stable':
-            yield 'stable', list(values)
+            stable_companies = list(values)
+            yield 'stable', stable_companies
         else:
             prices = list(values)
             min_price = min(prices, key=lambda x: x[1])
@@ -79,6 +80,15 @@ class StockAnalysis(MRJob):
 
         black_day = max(day_counts, key=day_counts.get)
         yield 'black_day', black_day
+
+    def reducer_final_output(self, key, values):
+        if key == 'black_day':
+            yield 'black_day', list(values)[0]
+        elif key == 'stable':
+            yield 'stable_companies', list(values)[0]
+        else:
+            for value in values:
+                yield key, value
 
 if __name__ == '__main__':
     StockAnalysis.run()
